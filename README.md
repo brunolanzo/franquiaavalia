@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Franquia Avalia
 
-## Getting Started
+Plataforma de avaliação de franquias brasileiras. Franqueados avaliam franqueadoras, investidores pesquisam reputação antes de investir.
 
-First, run the development server:
+## Stack
+
+- **Frontend:** Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- **Backend:** Next.js API Routes
+- **Banco de dados:** PostgreSQL + Prisma ORM
+- **Autenticação:** NextAuth.js v5
+- **Upload:** Cloudinary
+- **E-mail:** Resend
+- **Pagamento:** Stripe
+
+## Setup Local
+
+### Pré-requisitos
+
+- Node.js 18+
+- PostgreSQL rodando localmente
+- npm ou yarn
+
+### Instalação
 
 ```bash
+# 1. Clonar repositório
+git clone https://github.com/seu-usuario/franquia-avalia.git
+cd franquia-avalia
+
+# 2. Instalar dependências
+npm install
+
+# 3. Configurar variáveis de ambiente
+cp .env.example .env
+# Editar .env com suas credenciais
+
+# 4. Criar banco de dados e rodar migrations
+npx prisma migrate dev --name init
+
+# 5. Popular banco com dados de teste
+npx prisma db seed
+
+# 6. Rodar servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Credenciais de teste (seed)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Tipo | Email | Senha |
+|------|-------|-------|
+| Admin | admin@franquiaavalia.com.br | senha123 |
+| Franqueado | franqueado1@email.com | senha123 |
 
-## Learn More
+## Deploy (Hostinger VPS)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# 1. Clone no servidor
+git clone https://github.com/seu-usuario/franquia-avalia.git
+cd franquia-avalia
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 2. Instalar dependências
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 3. Configurar .env com variáveis de produção
 
-## Deploy on Vercel
+# 4. Rodar migrations
+npx prisma migrate deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 5. Build
+npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# 6. Iniciar com PM2
+pm2 start npm --name "franquia-avalia" -- start
+
+# 7. Configurar Nginx como reverse proxy (porta 3000 → 80/443)
+# 8. SSL com Certbot (Let's Encrypt)
+```
+
+## Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── (public)/        # Páginas públicas (home, franquia, busca, ranking)
+│   ├── (auth)/          # Login, registro
+│   ├── dashboard/       # Painel do franqueado
+│   ├── empresa/         # Painel da franqueadora
+│   ├── admin/           # Painel administrativo
+│   └── api/             # API Routes
+├── components/
+│   ├── ui/              # Componentes base
+│   ├── layout/          # Header, Footer
+│   └── providers/       # Context providers
+├── lib/                 # Prisma, auth, utils
+├── hooks/               # Custom hooks
+└── types/               # TypeScript types + Zod schemas
+```
+
+## Licença
+
+Projeto privado. Todos os direitos reservados.

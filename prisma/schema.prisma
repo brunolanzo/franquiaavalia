@@ -1,0 +1,260 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USUÁRIOS ====================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String?
+  image         String?
+  role          Role      @default(INVESTOR)
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  avaliacoes Avaliacao[]
+  franqueado Franqueado?
+  accounts   Account[]
+  sessions   Session[]
+
+  @@map("users")
+}
+
+enum Role {
+  INVESTOR
+  FRANCHISEE
+  COMPANY
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ==================== FRANQUEADO ====================
+
+model Franqueado {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  cnpj       String?
+  verified   Boolean  @default(false)
+  franquiaId String?
+  createdAt  DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id])
+  franquia Franquia? @relation(fields: [franquiaId], references: [id])
+
+  @@map("franqueados")
+}
+
+// ==================== FRANQUIAS (FRANQUEADORAS) ====================
+
+model Franquia {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  nome            String
+  cnpj            String?  @unique
+  descricao       String?  @db.Text
+  logo            String?
+  capa            String?
+  website         String?
+  telefone        String?
+  email           String?
+  segmento        Segmento
+  investimentoMin Decimal? @db.Decimal(12, 2)
+  investimentoMax Decimal? @db.Decimal(12, 2)
+  taxaFranquia    Decimal? @db.Decimal(12, 2)
+  royalties       String?
+  unidades        Int?
+  fundacao        Int?
+  sede            String?
+  faturamentoMedio Decimal? @db.Decimal(12, 2)
+  prazoRetorno    String?
+
+  // Brand Page (plano pago)
+  plano          Plano   @default(FREE)
+  videoUrl       String?
+  faq            Json?
+  ctaTexto       String?
+  ctaUrl         String?
+  seloVerificada Boolean @default(false)
+  seloFA1000     Boolean @default(false)
+
+  // Scores calculados
+  notaGeral          Decimal? @db.Decimal(3, 1)
+  notaSuporte        Decimal? @db.Decimal(3, 1)
+  notaRentabilidade  Decimal? @db.Decimal(3, 1)
+  notaTransparencia  Decimal? @db.Decimal(3, 1)
+  notaTreinamento    Decimal? @db.Decimal(3, 1)
+  notaMarketing      Decimal? @db.Decimal(3, 1)
+  notaSatisfacao     Decimal? @db.Decimal(3, 1)
+  totalAvaliacoes    Int      @default(0)
+  indiceResposta     Decimal? @db.Decimal(5, 2)
+  indiceRecomendacao Decimal? @db.Decimal(5, 2)
+
+  reputacao Reputacao @default(SEM_AVALIACAO)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  avaliacoes   Avaliacao[]
+  franqueados  Franqueado[]
+  leads        Lead[]
+  companyUsers CompanyUser[]
+
+  @@map("franquias")
+}
+
+enum Segmento {
+  ALIMENTACAO
+  SAUDE_BELEZA
+  EDUCACAO
+  SERVICOS
+  MODA
+  TECNOLOGIA
+  CASA_CONSTRUCAO
+  AUTOMOTIVO
+  ENTRETENIMENTO
+  FINANCEIRO
+  LIMPEZA
+  PETS
+  OUTROS
+}
+
+enum Plano {
+  FREE
+  INICIANTE
+  AVANCADO
+  PREMIUM
+}
+
+enum Reputacao {
+  SEM_AVALIACAO
+  NAO_RECOMENDADA
+  REGULAR
+  BOM
+  OTIMO
+  FA1000
+}
+
+// ==================== AVALIAÇÕES ====================
+
+model Avaliacao {
+  id         String  @id @default(cuid())
+  franquiaId String
+  userId     String
+  titulo     String
+  conteudo   String  @db.Text
+  anonimo    Boolean @default(true)
+
+  notaSuporte       Int
+  notaRentabilidade Int
+  notaTransparencia Int
+  notaTreinamento   Int
+  notaMarketing     Int
+  notaSatisfacao    Int
+  notaGeral         Decimal @db.Decimal(3, 1)
+
+  investiriaNovamente Boolean
+  tempoFranquia       String?
+
+  status    StatusAvaliacao @default(PENDENTE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  resposta Resposta?
+
+  franquia Franquia @relation(fields: [franquiaId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@map("avaliacoes")
+}
+
+enum StatusAvaliacao {
+  PENDENTE
+  APROVADA
+  REJEITADA
+}
+
+model Resposta {
+  id          String   @id @default(cuid())
+  avaliacaoId String   @unique
+  conteudo    String   @db.Text
+  createdAt   DateTime @default(now())
+
+  avaliacao Avaliacao @relation(fields: [avaliacaoId], references: [id])
+
+  @@map("respostas")
+}
+
+// ==================== LEADS ====================
+
+model Lead {
+  id         String   @id @default(cuid())
+  franquiaId String
+  nome       String
+  email      String
+  telefone   String?
+  mensagem   String?  @db.Text
+  capital    String?
+  cidade     String?
+  origem     String?
+  createdAt  DateTime @default(now())
+
+  franquia Franquia @relation(fields: [franquiaId], references: [id])
+
+  @@map("leads")
+}
+
+// ==================== EMPRESA (MULTI-USUÁRIO) ====================
+
+model CompanyUser {
+  id         String      @id @default(cuid())
+  email      String
+  franquiaId String
+  role       CompanyRole @default(ATENDENTE)
+  createdAt  DateTime    @default(now())
+
+  franquia Franquia @relation(fields: [franquiaId], references: [id])
+
+  @@unique([email, franquiaId])
+  @@map("company_users")
+}
+
+enum CompanyRole {
+  ADMIN
+  ATENDENTE
+}
