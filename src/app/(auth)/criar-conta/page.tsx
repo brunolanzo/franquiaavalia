@@ -27,10 +27,10 @@ const accountTypes = [
     title: "Franqueado",
     description: "Compartilhe sua experiência e ajude outros investidores",
     benefits: [
-      "Avalie sua franqueadora",
+      "Avalie sua franqueadora de forma anônima",
+      "Seus dados nunca são compartilhados com a empresa",
       "Acompanhe o status das suas avaliações",
-      "Receba respostas da franqueadora",
-      "Contribua com a comunidade",
+      "Receba respostas da franqueadora com segurança",
     ],
     buttonText: "Criar conta como Franqueado",
     href: "/registro?tipo=franqueado",

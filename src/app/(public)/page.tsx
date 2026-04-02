@@ -276,18 +276,73 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Trust & Privacy Section */}
+      <section className="bg-white px-4 py-16">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#1B4D3E]/10 px-4 py-1.5 text-sm font-medium text-[#1B4D3E] mb-4">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              Sua identidade protegida
+            </span>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Avalie com total segurança
+            </h2>
+            <p className="mt-3 mx-auto max-w-2xl text-gray-500">
+              No Franquia Avalia, a privacidade do franqueado é prioridade absoluta.
+              Suas informações pessoais nunca são compartilhadas com as franqueadoras.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-xl border border-gray-100 bg-[#F8F9FA] p-6 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#1B4D3E]/10">
+                <svg className="h-7 w-7 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l-1-1m0 0l-1 1m1-1v4" /></svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">100% Anônimo</h3>
+              <p className="text-sm text-gray-600">
+                Todas as avaliações são publicadas de forma anônima por padrão.
+                Seu nome, email e CNPJ nunca aparecem para a franqueadora.
+              </p>
+            </div>
+            <div className="rounded-xl border border-gray-100 bg-[#F8F9FA] p-6 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#1B4D3E]/10">
+                <svg className="h-7 w-7 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Dados Protegidos</h3>
+              <p className="text-sm text-gray-600">
+                Não compartilhamos nenhum dado pessoal com franqueadoras.
+                A empresa só vê o conteúdo da avaliação, sem saber quem escreveu.
+              </p>
+            </div>
+            <div className="rounded-xl border border-gray-100 bg-[#F8F9FA] p-6 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#1B4D3E]/10">
+                <svg className="h-7 w-7 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Opine Livremente</h3>
+              <p className="text-sm text-gray-600">
+                Elogios ou críticas — sua opinião honesta é o que importa.
+                Franqueadoras não podem remover avaliações negativas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-[#1B4D3E] px-4 py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="mb-4 text-3xl font-bold text-white">
-            E franqueado? Avalie sua franquia
+            É franqueado? Avalie sua franquia
           </h2>
-          <p className="mb-8 text-lg text-gray-200">
-            Sua avaliacao ajuda outros investidores a tomarem decisoes melhores.
-            Compartilhe sua experiencia de forma anonima e segura.
+          <p className="mb-4 text-lg text-gray-200">
+            Sua avaliação ajuda outros investidores a tomarem decisões melhores.
+            Compartilhe sua experiência de forma anônima e segura.
+          </p>
+          <p className="mb-8 text-sm text-gray-300/80">
+            Seus dados pessoais nunca são compartilhados com as franqueadoras.
+            Você tem total liberdade para opinar.
           </p>
           <Link
-            href="/registro"
+            href="/criar-conta"
             className="inline-block rounded-xl bg-accent px-8 py-4 text-lg font-semibold text-white shadow-lg transition-colors hover:bg-accent-hover"
           >
             Criar conta e avaliar

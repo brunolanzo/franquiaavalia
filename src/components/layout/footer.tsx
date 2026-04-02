@@ -9,9 +9,15 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold text-white">Franquia Avalia</h3>
             <p className="mt-3 text-sm leading-relaxed text-gray-400">
-              A plataforma brasileira de avaliacao de franquias. Pesquise,
+              A plataforma brasileira de avaliação de franquias. Pesquise,
               compare e avalie franquias antes de investir seu dinheiro.
             </p>
+            <div className="mt-4 flex items-start gap-2 rounded-lg bg-gray-800 p-3">
+              <svg className="h-4 w-4 text-[#2D7A5F] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              <p className="text-xs text-gray-400">
+                <span className="font-medium text-gray-300">Privacidade garantida:</span> dados pessoais dos franqueados nunca são compartilhados com as franqueadoras.
+              </p>
+            </div>
           </div>
 
           {/* Column 2: Navigation */}

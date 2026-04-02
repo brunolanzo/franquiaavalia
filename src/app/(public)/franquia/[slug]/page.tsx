@@ -279,11 +279,17 @@ export default async function FranquiaPage({ params }: Props) {
 
         {/* ===== REVIEWS ===== */}
         <section>
-          <div className="flex items-center gap-2 mb-4">
-            <MessageSquare className="h-5 w-5 text-[#1B4D3E]" />
-            <h2 className="text-lg font-bold text-gray-900">
-              Avaliações de Franqueados
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-[#1B4D3E]" />
+              <h2 className="text-lg font-bold text-gray-900">
+                Avaliações de Franqueados
+              </h2>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              Avaliações anônimas — identidade dos franqueados protegida
+            </span>
           </div>
 
           {franquia.avaliacoes.length > 0 ? (

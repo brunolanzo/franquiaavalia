@@ -258,9 +258,19 @@ export default function AvaliarContent() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="mb-2 text-2xl font-bold text-gray-900">Avaliar Franquia</h1>
-      <p className="mb-8 text-gray-600">
+      <p className="mb-4 text-gray-600">
         Compartilhe sua experiência como franqueado e ajude outros investidores.
       </p>
+      <div className="mb-8 flex items-start gap-3 rounded-lg bg-[#1B4D3E]/5 border border-[#1B4D3E]/10 p-4">
+        <svg className="h-5 w-5 text-[#1B4D3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+        <div>
+          <p className="text-sm font-medium text-[#1B4D3E]">Sua avaliação é anônima e segura</p>
+          <p className="text-xs text-gray-600 mt-0.5">
+            Seus dados pessoais (nome, email, CNPJ) nunca são compartilhados com a franqueadora.
+            A empresa só vê o conteúdo da avaliação, sem saber quem escreveu.
+          </p>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Franchise Selector */}
@@ -503,12 +513,16 @@ export default function AvaliarContent() {
             </div>
 
             {/* Anonimo */}
-            <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4">
+            <div className="flex items-center justify-between rounded-lg bg-[#1B4D3E]/5 border border-[#1B4D3E]/10 p-4">
               <div>
-                <label htmlFor="anonimo" className="text-sm font-medium text-gray-700">
+                <label htmlFor="anonimo" className="text-sm font-medium text-[#1B4D3E]">
                   Publicar anonimamente
                 </label>
-                <p className="text-xs text-gray-500">Seu nome não será exibido publicamente</p>
+                <p className="text-xs text-gray-600">
+                  {watchedValues.anonimo
+                    ? "Sua identidade está protegida. A franqueadora não saberá quem escreveu."
+                    : "Seu primeiro nome será exibido, mas seus dados de contato permanecem protegidos."}
+                </p>
               </div>
               <button
                 type="button"
