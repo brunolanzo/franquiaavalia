@@ -24,7 +24,6 @@ export default function MinhaFranquiaPage() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Franqueado data
-  const [franqueadoId, setFranqueadoId] = useState<string | null>(null);
   const [linkedFranquia, setLinkedFranquia] = useState<FranquiaResult | null>(null);
   const [verified, setVerified] = useState(false);
   const [role, setRole] = useState("");
@@ -48,7 +47,6 @@ export default function MinhaFranquiaPage() {
           if (r.success) {
             setRole(r.data.user.role);
             if (r.data.franqueado) {
-              setFranqueadoId(r.data.franqueado.id);
               setVerified(r.data.franqueado.verified);
               if (r.data.franqueado.franquia) {
                 setLinkedFranquia(r.data.franqueado.franquia);
