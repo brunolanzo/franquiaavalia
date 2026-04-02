@@ -120,7 +120,6 @@ export default function BuscaContent() {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  const isFirstMount = useRef(true);
 
   const buildUrl = useCallback(() => {
     const params = new URLSearchParams();
