@@ -121,18 +121,6 @@ export default function BuscaContent() {
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const buildUrl = useCallback(() => {
-    const params = new URLSearchParams();
-    if (query) params.set("q", query);
-    segmentos.forEach((s) => params.append("segmento", s));
-    if (investimento) params.set("investimento", investimento);
-    if (notaMin) params.set("notaMin", notaMin);
-    reputacoes.forEach((r) => params.append("reputacao", r));
-    if (sort && sort !== "relevancia") params.set("sort", sort);
-    if (page > 1) params.set("page", String(page));
-    return params.toString();
-  }, [query, segmentos, investimento, notaMin, reputacoes, sort, page]);
-
   const fetchData = useCallback(async () => {
     setLoading(true);
 
@@ -173,13 +161,6 @@ export default function BuscaContent() {
       setLoading(false);
     }
   }, [query, segmentos, investimento, notaMin, reputacoes, sort, page]);
-
-  // Sync URL when filters change (native history to avoid Next.js navigation/remount)
-  useEffect(() => {
-    const urlParams = buildUrl();
-    const path = urlParams ? `/busca?${urlParams}` : "/busca";
-    window.history.replaceState(null, "", path);
-  }, [buildUrl]);
 
   // Fetch data when filters change
   useEffect(() => {
