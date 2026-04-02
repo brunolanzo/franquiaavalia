@@ -148,7 +148,7 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
     <div className="relative">
       <button
         onClick={() => {
-          if (navigator.share) {
+          if (typeof navigator.share === "function") {
             handleNativeShare();
           } else {
             setOpen(!open);
