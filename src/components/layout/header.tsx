@@ -90,7 +90,7 @@ export default function Header() {
                     className="flex items-center gap-2 px-4 py-2 text-sm text-[#1F2937] hover:bg-gray-50"
                   >
                     <User className="h-4 w-4" />
-                    Dashboard
+                    Painel
                   </Link>
                   <button
                     type="button"
