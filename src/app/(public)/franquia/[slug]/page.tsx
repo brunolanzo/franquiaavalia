@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import { SEGMENTOS_LABELS } from "@/lib/constants";
 import { FranchiseJsonLd } from "@/components/seo/json-ld";
 import { ScoreDisplay } from "@/components/franquia/score-display";
+import { ShareButton } from "@/components/franquia/share-button";
 import { NotaBar } from "@/components/franquia/nota-bar";
 import { LeadForm } from "@/components/franquia/lead-form";
 import { ReviewCard } from "@/components/avaliacao/review-card";
@@ -157,22 +158,29 @@ export default async function FranquiaPage({ params }: Props) {
 
               {/* Details */}
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-                    {franquia.nome}
-                  </h1>
-                  {franquia.seloVerificada && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
-                      <BadgeCheck className="h-3.5 w-3.5" />
-                      Verificada
-                    </span>
-                  )}
-                  {franquia.seloFA1000 && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
-                      <Trophy className="h-3.5 w-3.5" />
-                      FA 1000
-                    </span>
-                  )}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                      {franquia.nome}
+                    </h1>
+                    {franquia.seloVerificada && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+                        <BadgeCheck className="h-3.5 w-3.5" />
+                        Verificada
+                      </span>
+                    )}
+                    {franquia.seloFA1000 && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+                        <Trophy className="h-3.5 w-3.5" />
+                        FA 1000
+                      </span>
+                    )}
+                  </div>
+                  <ShareButton
+                    title={franquia.nome}
+                    text={`Veja as avaliações de ${franquia.nome} no Franquia Avalia`}
+                    url={`/franquia/${franquia.slug}`}
+                  />
                 </div>
 
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
