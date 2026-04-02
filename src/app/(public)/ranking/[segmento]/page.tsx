@@ -29,10 +29,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `Ranking de Franquias de ${label} | ${SITE_NAME}`,
-    description: `Veja o ranking das melhores franquias de ${label} segundo avaliacoes reais de franqueados.`,
+    description: `Veja o ranking das melhores franquias de ${label} segundo avaliações reais de franqueados.`,
     openGraph: {
       title: `Ranking de Franquias de ${label} | ${SITE_NAME}`,
-      description: `Veja o ranking das melhores franquias de ${label} segundo avaliacoes reais de franqueados.`,
+      description: `Veja o ranking das melhores franquias de ${label} segundo avaliações reais de franqueados.`,
     },
   };
 }
@@ -290,7 +290,7 @@ function RankingTable({
                 <NotaBadge nota={f.notaGeral ? Number(f.notaGeral) : null} />
                 <ReputacaoBadge reputacao={f.reputacao} />
                 <span className="text-xs text-gray-400">
-                  {f.totalAvaliacoes} avaliacoes
+                  {f.totalAvaliacoes} avaliações
                 </span>
               </div>
             </div>
@@ -343,7 +343,7 @@ export default async function RankingSegmentoPage({ params }: PageProps) {
           Ranking &mdash; {segmentoLabel}
         </h1>
         <p className="mb-8 text-gray-500">
-          As melhores franquias de {segmentoLabel} segundo avaliacoes reais de
+          As melhores franquias de {segmentoLabel} segundo avaliações reais de
           franqueados
         </p>
 

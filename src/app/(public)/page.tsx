@@ -9,10 +9,10 @@ import { SEGMENTOS_LABELS, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 import { WebsiteJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} - Pesquise a reputacao antes de investir`,
+  title: `${SITE_NAME} - Pesquise a reputação antes de investir`,
   description: SITE_DESCRIPTION,
   openGraph: {
-    title: `${SITE_NAME} - Pesquise a reputacao antes de investir`,
+    title: `${SITE_NAME} - Pesquise a reputação antes de investir`,
     description: SITE_DESCRIPTION,
   },
 };
@@ -74,11 +74,11 @@ export default async function HomePage() {
       <section className="bg-[#1B4D3E] px-4 py-24">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="mb-6 text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
-            Pesquise a reputacao antes de investir
+            Pesquise a reputação antes de investir
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 md:text-xl">
-            A maior plataforma de avaliacoes de franquias do Brasil.
-            Decisoes melhores comecam com informacoes reais de quem ja investiu.
+            A maior plataforma de avaliações de franquias do Brasil.
+            Decisões melhores começam com informações reais de quem já investiu.
           </p>
           <form
             action="/busca"
@@ -209,7 +209,7 @@ export default async function HomePage() {
               Rankings por segmento
             </h2>
             <p className="mt-2 text-gray-500">
-              Encontre as melhores franquias no segmento que voce procura
+              Encontre as melhores franquias no segmento que você procura
             </p>
           </div>
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -249,7 +249,7 @@ export default async function HomePage() {
               {
                 step: "2",
                 title: "Compare",
-                desc: "Veja notas, avaliacoes e compare franquias lado a lado",
+                desc: "Veja notas, avaliações e compare franquias lado a lado",
                 icon: "\uD83D\uDCCA",
               },
               {

@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navItems = [
-  { href: "/empresa", label: "Visao Geral", icon: HomeIcon },
-  { href: "/empresa/avaliacoes", label: "Avaliacoes", icon: StarIcon },
+  { href: "/empresa", label: "Visão Geral", icon: HomeIcon },
+  { href: "/empresa/avaliacoes", label: "Avaliações", icon: StarIcon },
   { href: "/empresa/leads", label: "Leads", icon: UsersIcon },
   { href: "/empresa/perfil", label: "Meu Perfil", icon: UserIcon },
   { href: "/empresa/analytics", label: "Analytics", icon: ChartIcon },

@@ -14,11 +14,11 @@ import {
 export const metadata: Metadata = {
   title: `Ranking de Franquias | ${SITE_NAME}`,
   description:
-    "Veja o ranking das melhores franquias do Brasil segundo avaliacoes reais de franqueados.",
+    "Veja o ranking das melhores franquias do Brasil segundo avaliações reais de franqueados.",
   openGraph: {
     title: `Ranking de Franquias | ${SITE_NAME}`,
     description:
-      "Veja o ranking das melhores franquias do Brasil segundo avaliacoes reais de franqueados.",
+      "Veja o ranking das melhores franquias do Brasil segundo avaliações reais de franqueados.",
   },
 };
 
@@ -249,7 +249,7 @@ function RankingTable({
                 <NotaBadge nota={f.notaGeral ? Number(f.notaGeral) : null} />
                 <ReputacaoBadge reputacao={f.reputacao} />
                 <span className="text-xs text-gray-400">
-                  {f.totalAvaliacoes} avaliacoes
+                  {f.totalAvaliacoes} avaliações
                 </span>
               </div>
             </div>
@@ -321,7 +321,7 @@ export default async function RankingPage() {
           Ranking de Franquias
         </h1>
         <p className="mb-8 text-gray-500">
-          As melhores franquias do Brasil segundo avaliacoes reais de franqueados
+          As melhores franquias do Brasil segundo avaliações reais de franqueados
         </p>
 
         <SegmentTabs activeSegmento={null} />

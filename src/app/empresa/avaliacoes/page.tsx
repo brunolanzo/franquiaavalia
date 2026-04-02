@@ -164,7 +164,7 @@ export default function EmpresaAvaliacoes() {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
             />
           </svg>
-          <p className="text-sm text-gray-500">Carregando avaliacoes...</p>
+          <p className="text-sm text-gray-500">Carregando avaliações...</p>
         </div>
       </div>
     );
@@ -186,9 +186,9 @@ export default function EmpresaAvaliacoes() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Avaliacoes</h1>
+      <h1 className="text-2xl font-bold text-gray-900">Avaliações</h1>
       <p className="mt-1 text-sm text-gray-500">
-        Gerencie e responda as avaliacoes da sua franquia.
+        Gerencie e responda as avaliações da sua franquia.
       </p>
 
       {avaliacoes.length === 0 ? (
