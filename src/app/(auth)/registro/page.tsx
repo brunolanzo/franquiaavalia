@@ -5,11 +5,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { registerSchema, type RegisterFormData } from "@/types";
+import { Suspense } from "react";
 
-export default function RegistroPage() {
+function RegistroForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tipo = searchParams.get("tipo");
+  const defaultRole = tipo === "franqueado" ? "FRANCHISEE" : "INVESTOR";
+
   const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +26,7 @@ export default function RegistroPage() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: "INVESTOR",
+      role: defaultRole,
     },
   });
 
@@ -54,7 +59,7 @@ export default function RegistroPage() {
       if (signInResult?.error) {
         setAuthError("Conta criada, mas houve erro ao entrar. Tente fazer login.");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch {
       setAuthError("Ocorreu um erro. Tente novamente.");
@@ -63,12 +68,21 @@ export default function RegistroPage() {
     }
   };
 
+  const roleLabel = selectedRole === "FRANCHISEE" ? "Franqueado" : "Investidor";
+
   return (
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-8">
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
           Criar Conta
         </h1>
+        <p className="text-center text-sm text-gray-500 mb-6">
+          Cadastro como <span className="font-semibold text-[#1B4D3E]">{roleLabel}</span>
+          {" · "}
+          <Link href="/criar-conta" className="text-[#1B4D3E] hover:underline">
+            Alterar tipo
+          </Link>
+        </p>
 
         {authError && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -79,7 +93,7 @@ export default function RegistroPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Nome
+              Nome completo
             </label>
             <input
               id="name"
@@ -141,28 +155,32 @@ export default function RegistroPage() {
             )}
           </div>
 
-          <div>
+          {/* Hidden role field */}
+          <input type="hidden" {...register("role")} />
+
+          {/* Role toggle for users who want to switch */}
+          <div className="rounded-lg border border-gray-200 p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Perfil
+              Tipo de conta
             </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex gap-3">
+              <label className={`flex-1 flex items-center justify-center gap-2 cursor-pointer rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${selectedRole === "INVESTOR" ? "border-[#1B4D3E] bg-[#1B4D3E]/5 text-[#1B4D3E]" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                 <input
                   type="radio"
                   value="INVESTOR"
                   {...register("role")}
-                  className="w-4 h-4 text-[#1B4D3E] focus:ring-[#1B4D3E]"
+                  className="sr-only"
                 />
-                <span className="text-sm text-gray-700">Sou investidor</span>
+                Investidor
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className={`flex-1 flex items-center justify-center gap-2 cursor-pointer rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-colors ${selectedRole === "FRANCHISEE" ? "border-[#1B4D3E] bg-[#1B4D3E]/5 text-[#1B4D3E]" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
                 <input
                   type="radio"
                   value="FRANCHISEE"
                   {...register("role")}
-                  className="w-4 h-4 text-[#1B4D3E] focus:ring-[#1B4D3E]"
+                  className="sr-only"
                 />
-                <span className="text-sm text-gray-700">Sou franqueado</span>
+                Franqueado
               </label>
             </div>
           </div>
@@ -170,7 +188,7 @@ export default function RegistroPage() {
           {selectedRole === "FRANCHISEE" && (
             <div>
               <label htmlFor="cnpj" className="block text-sm font-medium text-gray-700 mb-1">
-                CNPJ
+                CNPJ <span className="text-gray-400">(opcional)</span>
               </label>
               <input
                 id="cnpj"
@@ -179,6 +197,9 @@ export default function RegistroPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1B4D3E] focus:border-transparent outline-none"
                 placeholder="00.000.000/0000-00"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Você poderá informar depois no seu perfil
+              </p>
               {errors.cnpj && (
                 <p className="mt-1 text-sm text-red-600">{errors.cnpj.message}</p>
               )}
@@ -194,15 +215,42 @@ export default function RegistroPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-2">
           <p className="text-sm text-gray-600">
-            Ja tem conta?{" "}
+            Já tem conta?{" "}
             <Link href="/login" className="text-[#1B4D3E] font-medium hover:underline">
               Entre aqui
+            </Link>
+          </p>
+          <p className="text-sm text-gray-600">
+            É empresa?{" "}
+            <Link href="/registro-empresa" className="text-[#1B4D3E] font-medium hover:underline">
+              Cadastre sua franqueadora
             </Link>
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegistroPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-lg p-8 animate-pulse">
+          <div className="h-8 w-40 mx-auto rounded bg-gray-200 mb-8" />
+          <div className="space-y-4">
+            <div className="h-10 rounded bg-gray-200" />
+            <div className="h-10 rounded bg-gray-200" />
+            <div className="h-10 rounded bg-gray-200" />
+            <div className="h-10 rounded bg-gray-200" />
+            <div className="h-12 rounded bg-gray-200" />
+          </div>
+        </div>
+      </div>
+    }>
+      <RegistroForm />
+    </Suspense>
   );
 }

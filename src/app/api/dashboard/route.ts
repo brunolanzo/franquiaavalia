@@ -19,7 +19,15 @@ export async function GET() {
         franqueado: {
           include: {
             franquia: {
-              select: { nome: true, slug: true },
+              select: {
+                id: true,
+                nome: true,
+                slug: true,
+                segmento: true,
+                sede: true,
+                notaGeral: true,
+                totalAvaliacoes: true,
+              },
             },
           },
         },

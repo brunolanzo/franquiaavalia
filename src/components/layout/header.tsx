@@ -107,12 +107,20 @@ export default function Header() {
               )}
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="rounded-lg border border-[#1B4D3E] px-4 py-2 text-sm font-medium text-[#1B4D3E] transition-colors hover:bg-[#1B4D3E] hover:text-white"
-            >
-              Entrar
-            </Link>
+            <>
+              <Link
+                href="/criar-conta"
+                className="rounded-lg bg-[#1B4D3E] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2D7A5F]"
+              >
+                Criar Conta
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-lg border border-[#1B4D3E] px-4 py-2 text-sm font-medium text-[#1B4D3E] transition-colors hover:bg-[#1B4D3E] hover:text-white"
+              >
+                Entrar
+              </Link>
+            </>
           )}
         </div>
 
@@ -165,7 +173,7 @@ export default function Header() {
                   className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-[#1F2937] hover:bg-gray-50"
                 >
                   <User className="h-4 w-4" />
-                  Dashboard
+                  Painel
                 </Link>
                 <button
                   type="button"
@@ -180,13 +188,22 @@ export default function Header() {
                 </button>
               </>
             ) : (
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg border border-[#1B4D3E] px-4 py-2.5 text-center text-sm font-medium text-[#1B4D3E] transition-colors hover:bg-[#1B4D3E] hover:text-white"
-              >
-                Entrar
-              </Link>
+              <>
+                <Link
+                  href="/criar-conta"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg bg-[#1B4D3E] px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-[#2D7A5F]"
+                >
+                  Criar Conta
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg border border-[#1B4D3E] px-4 py-2.5 text-center text-sm font-medium text-[#1B4D3E] transition-colors hover:bg-[#1B4D3E] hover:text-white"
+                >
+                  Entrar
+                </Link>
+              </>
             )}
           </div>
         </div>
