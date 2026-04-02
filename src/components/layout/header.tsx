@@ -57,7 +57,7 @@ export default function Header() {
         {/* Right: Actions (desktop) */}
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            href="/dashboard/avaliar"
+            href={session?.user ? "/dashboard/avaliar" : "/login?callbackUrl=/dashboard/avaliar"}
             className="rounded-lg bg-[#F59E0B] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#D97706]"
           >
             Avaliar Franquia
@@ -150,7 +150,7 @@ export default function Header() {
 
           <div className="flex flex-col gap-2">
             <Link
-              href="/dashboard/avaliar"
+              href={session?.user ? "/dashboard/avaliar" : "/login?callbackUrl=/dashboard/avaliar"}
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg bg-[#F59E0B] px-4 py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-[#D97706]"
             >
