@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FranchiseCard } from "@/components/franquia/franchise-card";
 import { SEGMENTOS_LABELS } from "@/lib/constants";
 
@@ -96,7 +96,6 @@ interface ApiResponse {
 
 export default function BuscaContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [segmentos, setSegmentos] = useState<string[]>(
@@ -176,20 +175,15 @@ export default function BuscaContent() {
     }
   }, [query, segmentos, investimento, notaMin, reputacoes, sort, page]);
 
-  // Sync URL when filters change
+  // Sync URL when filters change (native history to avoid Next.js navigation/remount)
   useEffect(() => {
     const urlParams = buildUrl();
     const path = urlParams ? `/busca?${urlParams}` : "/busca";
-    router.replace(path, { scroll: false });
-  }, [buildUrl, router]);
+    window.history.replaceState(null, "", path);
+  }, [buildUrl]);
 
   // Fetch data when filters change
   useEffect(() => {
-    if (isFirstMount.current) {
-      isFirstMount.current = false;
-      fetchData();
-      return;
-    }
     fetchData();
   }, [fetchData]);
 
