@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { SEGMENTOS_LABELS } from "@/lib/constants";
+import { CidadeEstadoSelect } from "@/components/ui/cidade-estado-select";
 
 function SugerirFranquiaForm() {
   const searchParams = useSearchParams();
@@ -124,19 +125,7 @@ function SugerirFranquiaForm() {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="cidade" className="mb-1.5 block text-sm font-medium text-gray-700">
-            Cidade / Estado
-          </label>
-          <input
-            id="cidade"
-            type="text"
-            value={cidade}
-            onChange={(e) => setCidade(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#1B4D3E] focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20"
-            placeholder="Ex: São Paulo, SP"
-          />
-        </div>
+        <CidadeEstadoSelect value={cidade} onChange={setCidade} />
 
         <div>
           <label htmlFor="observacoes" className="mb-1.5 block text-sm font-medium text-gray-700">
