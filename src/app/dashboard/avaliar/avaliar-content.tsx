@@ -363,7 +363,19 @@ export default function AvaliarContent() {
           </div>
         </div>
 
-        {/* Rating Sliders */}
+        {/* Awaiting franchise selection */}
+        {!selectedFranchise && (
+          <div className="rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 p-10 text-center">
+            <svg className="mx-auto mb-3 h-10 w-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <p className="text-sm font-medium text-gray-500">Selecione uma franquia acima para continuar</p>
+            <p className="mt-1 text-xs text-gray-400">Os critérios de avaliação aparecerão após a seleção</p>
+          </div>
+        )}
+
+        {/* Rating Sliders + rest of form — only shown after franchise is selected */}
+        {selectedFranchise && (<>
         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Notas</h2>
@@ -676,6 +688,7 @@ export default function AvaliarContent() {
             )}
           </button>
         </div>
+        </>)}
       </form>
 
       {/* Custom slider styles */}
