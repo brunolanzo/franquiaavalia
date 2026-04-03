@@ -126,7 +126,7 @@ export default function AvaliarContent() {
           })
         );
         setFranchiseOptions(options);
-        setShowDropdown(options.length > 0);
+        setShowDropdown(true);
       } catch {
         setFranchiseOptions([]);
       } finally {
@@ -310,28 +310,46 @@ export default function AvaliarContent() {
               )}
             </div>
 
-            {showDropdown && (
-              <ul className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
-                {franchiseOptions.map((option) => (
-                  <li key={option.id}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedFranchise(option);
-                        setSearchQuery(option.name);
-                        setValue("franquiaId", option.id);
-                        setShowDropdown(false);
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition hover:bg-gray-50"
+            {showDropdown && !isSearching && (
+              <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+                {franchiseOptions.length > 0 ? (
+                  <ul>
+                    {franchiseOptions.map((option) => (
+                      <li key={option.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFranchise(option);
+                            setSearchQuery(option.name);
+                            setValue("franquiaId", option.id);
+                            setShowDropdown(false);
+                          }}
+                          className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition hover:bg-gray-50"
+                        >
+                          <span className="font-medium text-gray-900">{option.name}</span>
+                          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                            {SEGMENTOS_LABELS[option.segmento] || option.segmento}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="px-4 py-4 text-center">
+                    <p className="text-sm text-gray-500">
+                      Nenhuma franquia encontrada para &quot;{searchQuery}&quot;
+                    </p>
+                    <Link
+                      href={`/dashboard/sugerir-franquia?nome=${encodeURIComponent(searchQuery)}`}
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#1B4D3E]/10 px-4 py-2 text-sm font-medium text-[#1B4D3E] transition hover:bg-[#1B4D3E]/20"
+                      onClick={() => setShowDropdown(false)}
                     >
-                      <span className="font-medium text-gray-900">{option.name}</span>
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-                        {SEGMENTOS_LABELS[option.segmento] || option.segmento}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                      Cadastrar esta franquia
+                    </Link>
+                  </div>
+                )}
+              </div>
             )}
 
             {selectedFranchise && (

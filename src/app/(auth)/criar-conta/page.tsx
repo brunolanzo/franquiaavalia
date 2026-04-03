@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TrendingUp, Star, Building2, CheckCircle2 } from "lucide-react";
+import { TrendingUp, Star, Building2, CheckCircle2, ShieldCheck } from "lucide-react";
 
 const accountTypes = [
   {
@@ -109,6 +109,18 @@ export default function CriarContaPage() {
                   </li>
                 ))}
               </ul>
+
+              {type.id === "franqueado" && (
+                <div className="mt-5 rounded-lg bg-[#1B4D3E]/10 border border-[#1B4D3E]/20 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ShieldCheck className="h-5 w-5 text-[#1B4D3E]" />
+                    <span className="text-sm font-bold text-[#1B4D3E]">100% Anônimo e Seguro</span>
+                  </div>
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    Sua identidade é protegida. Seus dados pessoais (nome, email, CNPJ) <strong>nunca</strong> são compartilhados com as franqueadoras. A empresa só vê o conteúdo da avaliação.
+                  </p>
+                </div>
+              )}
 
               <Link
                 href={type.href}

@@ -21,10 +21,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  avaliacoes Avaliacao[]
-  franqueado Franqueado?
-  accounts   Account[]
-  sessions   Session[]
+  avaliacoes         Avaliacao[]
+  franqueado         Franqueado?
+  accounts           Account[]
+  sessions           Session[]
+  sugestoesFranquia  SugestaoFranquia[]
 
   @@map("users")
 }
@@ -258,4 +259,21 @@ model CompanyUser {
 enum CompanyRole {
   ADMIN
   ATENDENTE
+}
+
+// ==================== SUGESTÕES DE FRANQUIA ====================
+
+model SugestaoFranquia {
+  id          String   @id @default(cuid())
+  nome        String
+  segmento    String?
+  cidade      String?
+  observacoes String?
+  userId      String
+  status      String   @default("PENDENTE")
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("sugestoes_franquia")
 }
