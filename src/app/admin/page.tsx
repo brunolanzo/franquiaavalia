@@ -3,12 +3,13 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [totalFranquias, totalAvaliacoes, avaliacoesPendentes, totalUsuarios] =
+  const [totalFranquias, totalAvaliacoes, avaliacoesPendentes, totalUsuarios, sugestoesPendentes] =
     await Promise.all([
       prisma.franquia.count(),
       prisma.avaliacao.count(),
       prisma.avaliacao.count({ where: { status: "PENDENTE" } }),
       prisma.user.count(),
+      prisma.sugestaoFranquia.count({ where: { status: "PENDENTE" } }),
     ]);
 
   const stats = [
@@ -39,6 +40,16 @@ export default async function AdminDashboard() {
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Sugestoes Pendentes",
+      value: sugestoesPendentes,
+      color: "bg-teal-600",
+      icon: (
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
     },
