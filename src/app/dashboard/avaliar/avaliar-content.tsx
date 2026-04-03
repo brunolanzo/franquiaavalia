@@ -108,7 +108,7 @@ export default function AvaliarContent() {
   // Debounced franchise search
   const searchFranchises = useCallback((query: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (query.length < 2) {
+    if (query.length < 1) {
       setFranchiseOptions([]);
       setShowDropdown(false);
       return;
@@ -335,18 +335,30 @@ export default function AvaliarContent() {
                     ))}
                   </ul>
                 ) : (
-                  <div className="px-4 py-4 text-center">
-                    <p className="text-sm text-gray-500">
-                      Nenhuma franquia encontrada para &quot;{searchQuery}&quot;
+                  <div className="px-4 py-5">
+                    <p className="text-sm font-medium text-gray-700">
+                      Nenhum resultado para &quot;{searchQuery}&quot;
                     </p>
-                    <Link
-                      href={`/dashboard/sugerir-franquia?nome=${encodeURIComponent(searchQuery)}`}
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#1B4D3E]/10 px-4 py-2 text-sm font-medium text-[#1B4D3E] transition hover:bg-[#1B4D3E]/20"
-                      onClick={() => setShowDropdown(false)}
-                    >
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                      Cadastrar esta franquia
-                    </Link>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Deseja sugerir esta franquia para que nossa equipe a cadastre?
+                    </p>
+                    <div className="mt-3 flex gap-2">
+                      <Link
+                        href={`/dashboard/sugerir-franquia?nome=${encodeURIComponent(searchQuery)}`}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#1B4D3E] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#153D31]"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                        Sim, sugerir franquia
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setShowDropdown(false)}
+                        className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
+                      >
+                        Continuar buscando
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
