@@ -69,7 +69,7 @@ export default function MinhaFranquiaPage() {
       const res = await fetch(`/api/franquias?q=${encodeURIComponent(query)}&limit=5`);
       if (res.ok) {
         const json = await res.json();
-        setSearchResults(json.data || []);
+        setSearchResults(json.data?.franquias || json.data || []);
         setShowDropdown(true);
       }
     } catch {

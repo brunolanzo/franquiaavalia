@@ -118,7 +118,9 @@ export default function AvaliarContent() {
       try {
         const res = await fetch(`/api/franquias?q=${encodeURIComponent(query)}&limit=5`);
         const data = await res.json();
-        const options: FranquiaOption[] = (data.data || data || []).map(
+        const list = data.data?.franquias || data.data || data || [];
+        const items = Array.isArray(list) ? list : [];
+        const options: FranquiaOption[] = items.map(
           (f: Record<string, string>) => ({
             id: f.id,
             name: f.name || f.nome,
