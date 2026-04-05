@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Search, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { Search, Menu, X, User, LogOut, ChevronDown, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Header() {
@@ -84,6 +84,16 @@ export default function Header() {
 
               {userDropdownOpen && (
                 <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+                  {(session.user as { role?: string }).role === "ADMIN" && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-[#1B4D3E] font-medium hover:bg-gray-50"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Painel Admin
+                    </Link>
+                  )}
                   <Link
                     href="/dashboard"
                     onClick={() => setUserDropdownOpen(false)}
@@ -167,6 +177,16 @@ export default function Header() {
 
             {session?.user ? (
               <>
+                {(session.user as { role?: string }).role === "ADMIN" && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[#1B4D3E] hover:bg-gray-50"
+                  >
+                    <Shield className="h-4 w-4" />
+                    Painel Admin
+                  </Link>
+                )}
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
