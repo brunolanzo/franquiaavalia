@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Share2, X, Copy, Check } from "lucide-react";
+import { Share2, X, Copy, Check, Mail } from "lucide-react";
 
 interface ShareButtonProps {
   title: string;
@@ -57,6 +57,13 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
     setOpen(false);
   };
 
+  const shareEmail = () => {
+    const subject = encodeURIComponent(title);
+    const body = encodeURIComponent(`${text}\n\n${fullUrl}`);
+    window.open(`mailto:?subject=${subject}&body=${body}`);
+    setOpen(false);
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(fullUrl);
@@ -72,17 +79,6 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
       document.body.removeChild(input);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const handleNativeShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text, url: fullUrl });
-      } catch {
-        // user cancelled
-      }
-      setOpen(false);
     }
   };
 
@@ -142,18 +138,19 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
       textColor: "text-white",
       onClick: shareLinkedIn,
     },
+    {
+      name: "Email",
+      icon: <Mail className="h-5 w-5" />,
+      color: "bg-gray-600 hover:bg-gray-700",
+      textColor: "text-white",
+      onClick: shareEmail,
+    },
   ];
 
   return (
     <div className="relative">
       <button
-        onClick={() => {
-          if (typeof navigator.share === "function") {
-            handleNativeShare();
-          } else {
-            setOpen(!open);
-          }
-        }}
+        onClick={() => setOpen(!open)}
         className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
       >
         <Share2 className="h-4 w-4" />
