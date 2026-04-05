@@ -10,6 +10,7 @@ import { ShareButton } from "@/components/franquia/share-button";
 import { NotaBar } from "@/components/franquia/nota-bar";
 import { LeadForm } from "@/components/franquia/lead-form";
 import { ReviewCard } from "@/components/avaliacao/review-card";
+import { AvalieCTA } from "@/components/franquia/avalie-cta";
 import {
   BadgeCheck,
   Trophy,
@@ -215,6 +216,9 @@ export default async function FranquiaPage({ params }: Props) {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="mx-auto max-w-5xl px-4 py-8 space-y-8">
+        {/* ===== AVALIE CTA ===== */}
+        <AvalieCTA franquiaId={franquia.id} franquiaNome={franquia.nome} />
+
         {/* ===== SCORE PANEL ===== */}
         <section className="rounded-xl bg-white p-6 shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold text-gray-900 mb-4">
