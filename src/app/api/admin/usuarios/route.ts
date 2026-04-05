@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
           id: true, name: true, email: true, role: true,
           emailVerified: true, createdAt: true, image: true,
           _count: { select: { avaliacoes: true } },
+          franqueado: { select: { verified: true, cnpj: true } },
         },
       }),
       prisma.user.count({ where }),

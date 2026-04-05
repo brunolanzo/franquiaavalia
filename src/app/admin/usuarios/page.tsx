@@ -7,6 +7,7 @@ interface UserItem {
   id: string; name: string; email: string; role: string;
   emailVerified: string | null; createdAt: string; image: string | null;
   _count: { avaliacoes: number };
+  franqueado: { verified: boolean; cnpj: string | null } | null;
 }
 
 const ROLE_CONFIG: Record<string, { label: string; color: string }> = {
@@ -97,9 +98,11 @@ export default function AdminUsuariosPage() {
                       <td className="px-4 py-3 text-gray-600">{u._count.avaliacoes}</td>
                       <td className="px-4 py-3 text-gray-400">{new Date(u.createdAt).toLocaleDateString("pt-BR")}</td>
                       <td className="px-4 py-3">
-                        {u.emailVerified
-                          ? <CheckCircle className="h-4 w-4 text-green-500" />
-                          : <XCircle className="h-4 w-4 text-red-400" />
+                        {u.role === "FRANCHISEE"
+                          ? u.franqueado?.verified
+                            ? <CheckCircle className="h-4 w-4 text-green-500" />
+                            : <XCircle className="h-4 w-4 text-red-400" />
+                          : <span className="text-xs text-gray-400">—</span>
                         }
                       </td>
                     </tr>
@@ -123,10 +126,11 @@ export default function AdminUsuariosPage() {
                   <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
                     <span>{u._count.avaliacoes} avaliações</span>
                     <span>{new Date(u.createdAt).toLocaleDateString("pt-BR")}</span>
-                    {u.emailVerified
-                      ? <CheckCircle className="h-3.5 w-3.5 text-green-500" />
-                      : <XCircle className="h-3.5 w-3.5 text-red-400" />
-                    }
+                    {u.role === "FRANCHISEE" && (
+                      u.franqueado?.verified
+                        ? <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                        : <XCircle className="h-3.5 w-3.5 text-red-400" />
+                    )}
                   </div>
                 </div>
               );
