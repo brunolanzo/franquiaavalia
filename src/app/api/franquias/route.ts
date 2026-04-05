@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import type { Segmento, Reputacao } from "@prisma/client";
+
+const VALID_SEGMENTOS: Segmento[] = [
+  "ALIMENTACAO", "SAUDE_BELEZA", "EDUCACAO", "SERVICOS", "MODA",
+  "TECNOLOGIA", "CASA_CONSTRUCAO", "AUTOMOTIVO", "ENTRETENIMENTO",
+  "FINANCEIRO", "LIMPEZA", "PETS", "OUTROS",
+];
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,11 +27,15 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {};
 
     if (q) {
-      where.OR = [
+      const orClauses: Prisma.FranquiaWhereInput[] = [
         { nome: { contains: q, mode: "insensitive" } },
         { descricao: { contains: q, mode: "insensitive" } },
-        { segmento: { equals: q.toUpperCase() as Segmento } },
       ];
+      const upperQ = q.toUpperCase() as Segmento;
+      if (VALID_SEGMENTOS.includes(upperQ)) {
+        orClauses.push({ segmento: { equals: upperQ } });
+      }
+      where.OR = orClauses;
     }
 
     if (segmento) {
