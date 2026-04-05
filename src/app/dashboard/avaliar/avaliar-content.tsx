@@ -534,10 +534,10 @@ export default function AvaliarContent() {
                       onChange={(e) => setValue(key, Number(e.target.value))}
                       className="slider w-full cursor-pointer"
                     />
-                    <div className="mt-1 flex justify-between px-0.5">
-                      <span className="text-xs text-gray-400">1</span>
-                      <span className="text-xs text-gray-400">5</span>
-                      <span className="text-xs text-gray-400">10</span>
+                    <div className="relative mt-1 h-4">
+                      <span className="absolute left-0 text-xs text-gray-400">1</span>
+                      <span className="absolute -translate-x-1/2 text-xs text-gray-400" style={{ left: "44.44%" }}>5</span>
+                      <span className="absolute right-0 text-xs text-gray-400">10</span>
                     </div>
                   </div>
                 </div>
@@ -833,6 +833,7 @@ export default function AvaliarContent() {
           cursor: pointer;
           border: 3px solid white;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          margin-top: -7px;
         }
         .slider::-moz-range-thumb {
           width: 22px;
