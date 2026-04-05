@@ -7,6 +7,7 @@ import { FranchiseCard } from "@/components/franquia/franchise-card";
 import { ReviewCard } from "@/components/avaliacao/review-card";
 import { SEGMENTOS_LABELS, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 import { WebsiteJsonLd } from "@/components/seo/json-ld";
+import { HeroSearch } from "@/components/home/hero-search";
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} - Pesquise a reputação antes de investir`,
@@ -80,24 +81,7 @@ export default async function HomePage() {
             A maior plataforma de avaliações de franquias do Brasil.
             Decisões melhores começam com informações reais de quem já investiu.
           </p>
-          <form
-            action="/busca"
-            method="GET"
-            className="mx-auto flex max-w-2xl flex-col gap-3 sm:flex-row"
-          >
-            <input
-              type="text"
-              name="q"
-              placeholder="Pesquisar franquia por nome ou segmento..."
-              className="flex-1 rounded-xl px-6 py-4 text-lg text-gray-900 shadow-lg outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-white/50"
-            />
-            <button
-              type="submit"
-              className="rounded-xl bg-accent px-8 py-4 text-lg font-semibold text-white shadow-lg transition-colors hover:bg-accent-hover"
-            >
-              Buscar
-            </button>
-          </form>
+          <HeroSearch />
           <p className="mt-4 text-sm text-gray-300">
             Ex: McDonald&apos;s, Cacau Show, O Boticario...
           </p>
