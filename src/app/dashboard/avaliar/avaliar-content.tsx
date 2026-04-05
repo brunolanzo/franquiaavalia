@@ -569,24 +569,23 @@ export default function AvaliarContent() {
           <div className="space-y-4">
             {/* Investiria novamente */}
             <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4">
-              <label htmlFor="investiriaNovamente" className="text-sm font-medium text-gray-700">
-                Investiria novamente?
-              </label>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={watchedValues.investiriaNovamente}
-                onClick={() => setValue("investiriaNovamente", !watchedValues.investiriaNovamente)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20 focus:ring-offset-2 ${
-                  watchedValues.investiriaNovamente ? "bg-[#1B4D3E]" : "bg-gray-300"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
-                    watchedValues.investiriaNovamente ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
+              <span className="text-sm font-medium text-gray-700">Investiria novamente?</span>
+              <div className="flex overflow-hidden rounded-lg border border-gray-200 text-sm font-medium">
+                <button
+                  type="button"
+                  onClick={() => setValue("investiriaNovamente", true)}
+                  className={`px-5 py-2 transition-colors ${watchedValues.investiriaNovamente ? "bg-[#1B4D3E] text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                >
+                  Sim
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setValue("investiriaNovamente", false)}
+                  className={`border-l border-gray-200 px-5 py-2 transition-colors ${!watchedValues.investiriaNovamente ? "bg-red-500 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                >
+                  Não
+                </button>
+              </div>
               <input type="hidden" {...register("investiriaNovamente")} />
             </div>
 
@@ -665,32 +664,34 @@ export default function AvaliarContent() {
             </div>
 
             {/* Anonimo */}
-            <div className="flex items-center justify-between rounded-lg bg-[#1B4D3E]/5 border border-[#1B4D3E]/10 p-4">
-              <div>
-                <label htmlFor="anonimo" className="text-sm font-medium text-[#1B4D3E]">
-                  Publicar anonimamente
-                </label>
-                <p className="text-xs text-gray-600">
-                  {watchedValues.anonimo
-                    ? "Sua identidade está protegida. A franqueadora não saberá quem escreveu."
-                    : "Seu primeiro nome será exibido, mas seus dados de contato permanecem protegidos."}
-                </p>
+            <div className="rounded-xl border-2 border-[#1B4D3E]/20 bg-[#1B4D3E]/5 p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <svg className="h-4 w-4 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span className="text-sm font-semibold text-[#1B4D3E]">Publicar anonimamente?</span>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={watchedValues.anonimo}
-                onClick={() => setValue("anonimo", !watchedValues.anonimo)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20 focus:ring-offset-2 ${
-                  watchedValues.anonimo ? "bg-[#1B4D3E]" : "bg-gray-300"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
-                    watchedValues.anonimo ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
+              <p className="mb-4 text-xs text-gray-600">
+                {watchedValues.anonimo
+                  ? "Sua identidade está protegida. A franqueadora não saberá quem escreveu."
+                  : "Seu primeiro nome será exibido, mas seus dados de contato permanecem protegidos."}
+              </p>
+              <div className="flex overflow-hidden rounded-lg border border-[#1B4D3E]/20 text-sm font-medium">
+                <button
+                  type="button"
+                  onClick={() => setValue("anonimo", true)}
+                  className={`flex-1 py-2.5 transition-colors ${watchedValues.anonimo ? "bg-[#1B4D3E] text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                >
+                  Sim, publicar anonimamente
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setValue("anonimo", false)}
+                  className={`flex-1 border-l border-[#1B4D3E]/20 py-2.5 transition-colors ${!watchedValues.anonimo ? "bg-gray-500 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                >
+                  Não, exibir meu nome
+                </button>
+              </div>
               <input type="hidden" {...register("anonimo")} />
             </div>
           </div>
