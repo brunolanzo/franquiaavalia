@@ -108,3 +108,47 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
   }
 }
+
+// POST: manually create franchise from an already-approved suggestion
+export async function POST(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return NextResponse.json({ success: false, error: "Acesso negado" }, { status: 403 });
+    }
+
+    const { id } = await req.json();
+    if (!id) return NextResponse.json({ success: false, error: "ID obrigatório" }, { status: 400 });
+
+    const sugestao = await prisma.sugestaoFranquia.findUnique({ where: { id } });
+    if (!sugestao) return NextResponse.json({ success: false, error: "Sugestão não encontrada" }, { status: 404 });
+
+    // Check if franchise with this name already exists
+    const existing = await prisma.franquia.findFirst({
+      where: { nome: { equals: sugestao.nome, mode: "insensitive" } },
+    });
+    if (existing) {
+      return NextResponse.json({ success: false, error: `Franquia "${sugestao.nome}" já está cadastrada.` }, { status: 409 });
+    }
+
+    const baseSlug = generateSlug(sugestao.nome);
+    let slug = baseSlug;
+    let suffix = 1;
+    while (await prisma.franquia.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${suffix++}`;
+    }
+
+    const segmento: Segmento = (sugestao.segmento && SEGMENTO_MAP[sugestao.segmento])
+      ? SEGMENTO_MAP[sugestao.segmento]
+      : "OUTROS";
+
+    const franquia = await prisma.franquia.create({
+      data: { slug, nome: sugestao.nome, segmento, sede: sugestao.cidade || null },
+    });
+
+    return NextResponse.json({ success: true, data: franquia });
+  } catch (error) {
+    console.error("Erro ao criar franquia:", error);
+    return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
+  }
+}
