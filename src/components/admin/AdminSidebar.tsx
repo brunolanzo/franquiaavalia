@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 const navItems = [
   {
@@ -87,7 +88,7 @@ export default function AdminSidebar() {
       <aside
         className={`${
           mobileOpen ? "block" : "hidden"
-        } md:block w-full md:w-64 bg-[#1F2937] text-white flex-shrink-0`}
+        } md:block w-full md:w-64 bg-[#1F2937] text-white flex-shrink-0 relative`}
       >
         <div className="hidden md:block p-6 border-b border-gray-700">
           <h1 className="font-bold text-xl">Franquia Avalia</h1>
@@ -111,6 +112,29 @@ export default function AdminSidebar() {
             </Link>
           ))}
         </nav>
+
+        {/* Bottom actions */}
+        <div className="absolute bottom-0 left-0 w-full p-4 border-t border-gray-700 space-y-1">
+          <Link
+            href="/"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+            </svg>
+            <span className="font-medium">Ir para o Site</span>
+          </Link>
+          <button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span className="font-medium">Sair</span>
+          </button>
+        </div>
       </aside>
     </>
   );
