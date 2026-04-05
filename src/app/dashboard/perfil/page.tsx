@@ -3,7 +3,16 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Clock, Save } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle, Clock, Save, Building2 } from "lucide-react";
+
+interface FranquiaLinked {
+  id: string;
+  nome: string;
+  slug: string;
+  segmento: string;
+  sede?: string | null;
+}
 
 export default function PerfilPage() {
   const { status } = useSession();
@@ -16,6 +25,7 @@ export default function PerfilPage() {
   const [cnpj, setCnpj] = useState("");
   const [verified, setVerified] = useState(false);
   const [role, setRole] = useState("");
+  const [franquia, setFranquia] = useState<FranquiaLinked | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -33,6 +43,7 @@ export default function PerfilPage() {
             if (r.data.franqueado) {
               setCnpj(r.data.franqueado.cnpj || "");
               setVerified(r.data.franqueado.verified);
+              setFranquia(r.data.franqueado.franquia || null);
             }
           }
         })
@@ -131,6 +142,27 @@ export default function PerfilPage() {
                 <p className="text-xs text-gray-500">O CNPJ será verificado pela equipe administrativa</p>
               )}
             </div>
+
+            {franquia && (
+              <div>
+                <p className="mb-2 text-sm font-medium text-gray-700">Franquia vinculada</p>
+                <Link
+                  href={`/franquia/${franquia.slug}`}
+                  className="flex items-center gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#1B4D3E]/10 text-sm font-bold text-[#1B4D3E]">
+                    {franquia.nome.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">{franquia.nome}</p>
+                    <p className="text-xs text-gray-500 flex items-center gap-1">
+                      <Building2 className="h-3 w-3" />
+                      {franquia.segmento}{franquia.sede ? ` · ${franquia.sede}` : ""}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            )}
           </>
         )}
 
