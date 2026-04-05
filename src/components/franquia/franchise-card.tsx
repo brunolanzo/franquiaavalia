@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SEGMENTOS_LABELS, REPUTACAO_CONFIG } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
+import { GitCompareArrows } from "lucide-react";
 
 interface FranchiseCardProps {
   slug: string;
@@ -43,8 +44,8 @@ export function FranchiseCard({
   const rep = REPUTACAO_CONFIG[reputacao] || REPUTACAO_CONFIG.SEM_AVALIACAO;
 
   return (
-    <Link href={`/franquia/${slug}`} className="group block">
-      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/30 h-full">
+    <div className="group rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md hover:border-primary/30 h-full flex flex-col">
+      <Link href={`/franquia/${slug}`} className="block p-5 flex-1">
         <div className="flex items-start gap-4">
           {/* Logo */}
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-2xl font-bold text-primary">
@@ -106,7 +107,18 @@ export function FranchiseCard({
             </span>
           )}
         </div>
+      </Link>
+
+      {/* Compare link */}
+      <div className="border-t border-gray-100 px-5 py-2.5">
+        <Link
+          href={`/comparar?f1=${slug}`}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-[#1B4D3E] transition-colors"
+        >
+          <GitCompareArrows className="h-3.5 w-3.5" />
+          Comparar com outra franquia
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import { NotaBar } from "@/components/franquia/nota-bar";
 import { LeadForm } from "@/components/franquia/lead-form";
 import { ReviewCard } from "@/components/avaliacao/review-card";
 import { AvalieCTA } from "@/components/franquia/avalie-cta";
+import { GitCompareArrows } from "lucide-react";
 import {
   BadgeCheck,
   Trophy,
@@ -216,8 +217,24 @@ export default async function FranquiaPage({ params }: Props) {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="mx-auto max-w-5xl px-4 py-8 space-y-8">
-        {/* ===== AVALIE CTA ===== */}
+        {/* ===== CTAs ===== */}
         <AvalieCTA franquiaId={franquia.id} franquiaNome={franquia.nome} />
+
+        <a
+          href={`/comparar?f1=${franquia.slug}`}
+          className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm hover:border-[#1B4D3E]/30 hover:shadow-md transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1B4D3E]/10">
+              <GitCompareArrows className="h-5 w-5 text-[#1B4D3E]" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">Compare {franquia.nome} com outras franquias</p>
+              <p className="text-sm text-gray-500">Veja lado a lado notas, investimento e indicadores.</p>
+            </div>
+          </div>
+          <span className="shrink-0 text-sm font-medium text-[#1B4D3E]">Comparar →</span>
+        </a>
 
         {/* ===== SCORE PANEL ===== */}
         <section className="rounded-xl bg-white p-6 shadow-sm border border-gray-100">
