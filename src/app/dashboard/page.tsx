@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Star, Clock, CheckCircle, XCircle, MessageSquare } from "lucide-react";
+import { Star, Clock, CheckCircle, XCircle, MessageSquare, Building2 } from "lucide-react";
 
 export default function DashboardPage() {
   const { status } = useSession();
@@ -38,6 +38,8 @@ export default function DashboardPage() {
   const user = data?.user as Record<string, string> | undefined;
   const franqueado = data?.franqueado as Record<string, unknown> | undefined;
   const avaliacoes = (data?.avaliacoes || []) as Array<Record<string, unknown>>;
+  const sugestoes = (data?.sugestoes || []) as Array<{ id: string; nome: string; status: string; createdAt: string }>;
+  const sugestoesFiltradas = sugestoes.filter((s) => s.status !== "REJEITADA");
 
   const statusConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
     PENDENTE: { label: "Pendente", color: "bg-yellow-100 text-yellow-700", icon: Clock },
@@ -69,6 +71,49 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Minhas Sugestões */}
+      {sugestoesFiltradas.length > 0 && (
+        <div className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Minhas Sugestões</h2>
+          <div className="space-y-3">
+            {sugestoesFiltradas.map((s) => (
+              <div key={s.id} className={`rounded-xl border bg-white p-5 shadow-sm ${s.status === "APROVADA" ? "border-green-200" : "border-yellow-200"}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${s.status === "APROVADA" ? "bg-green-100" : "bg-yellow-100"}`}>
+                      <Building2 className={`h-4 w-4 ${s.status === "APROVADA" ? "text-green-600" : "text-yellow-600"}`} />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{s.nome}</p>
+                      <div className="mt-0.5 flex items-center gap-2">
+                        <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${s.status === "APROVADA" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                          {s.status === "APROVADA" ? <CheckCircle className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+                          {s.status === "APROVADA" ? "Aprovada" : "Aguardando análise"}
+                        </span>
+                        <span className="text-xs text-gray-400">{new Date(s.createdAt).toLocaleDateString("pt-BR")}</span>
+                      </div>
+                      <p className="mt-1.5 text-sm text-gray-600">
+                        {s.status === "APROVADA"
+                          ? "Ótima notícia! Sua franquia foi cadastrada. Agora você já pode avaliá-la."
+                          : "Sua sugestão está em análise. Aguarde o cadastro para poder avaliar."}
+                      </p>
+                    </div>
+                  </div>
+                  {s.status === "APROVADA" && (
+                    <Link
+                      href="/dashboard/avaliar"
+                      className="shrink-0 rounded-lg bg-[#F59E0B] px-4 py-2 text-sm font-semibold text-white hover:bg-[#D97706] transition-colors text-center"
+                    >
+                      Avaliar agora
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Reviews */}
       <div className="flex items-center justify-between mb-4">

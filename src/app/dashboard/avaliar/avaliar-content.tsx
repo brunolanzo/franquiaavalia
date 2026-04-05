@@ -29,6 +29,12 @@ export default function AvaliarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // CNPJ gate state
+  const [franqueadoData, setFranqueadoData] = useState<{ cnpj?: string; verified?: boolean } | null>(null);
+  const [cnpjInput, setCnpjInput] = useState("");
+  const [savingCnpj, setSavingCnpj] = useState(false);
+  const [cnpjError, setCnpjError] = useState("");
+
   // Franchise search state
   const [searchQuery, setSearchQuery] = useState("");
   const [franchiseOptions, setFranchiseOptions] = useState<FranquiaOption[]>([]);
@@ -155,6 +161,17 @@ export default function AvaliarContent() {
     }
   }, [status, router]);
 
+  // Load franqueado CNPJ data
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch("/api/dashboard")
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.success) setFranqueadoData(r.data.franqueado || {});
+        });
+    }
+  }, [status]);
+
   const onSubmit = async (data: AvaliacaoFormData) => {
     setIsSubmitting(true);
     setSubmitError("");
@@ -226,6 +243,76 @@ export default function AvaliarContent() {
     );
   }
 
+  // CNPJ gate — only for FRANCHISEE (ADMIN bypasses)
+  const isFranchisee = userRole === "FRANCHISEE";
+  const hasCnpj = franqueadoData && franqueadoData.cnpj;
+
+  const saveCnpj = async () => {
+    const cnpj = cnpjInput.replace(/\D/g, "");
+    if (cnpj.length !== 14) {
+      setCnpjError("CNPJ deve ter 14 dígitos.");
+      return;
+    }
+    setSavingCnpj(true);
+    setCnpjError("");
+    try {
+      const res = await fetch("/api/dashboard/cnpj", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cnpj: cnpjInput }),
+      });
+      if (res.ok) {
+        setFranqueadoData((prev) => ({ ...prev, cnpj: cnpjInput }));
+      } else {
+        setCnpjError("Erro ao salvar CNPJ. Tente novamente.");
+      }
+    } catch {
+      setCnpjError("Erro ao salvar CNPJ.");
+    } finally {
+      setSavingCnpj(false);
+    }
+  };
+
+  if (isFranchisee && franqueadoData !== null && !hasCnpj) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-12">
+        <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#1B4D3E]/10">
+            <svg className="h-7 w-7 text-[#1B4D3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900">Informe seu CNPJ</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Para avaliar ou sugerir franquias, precisamos validar o seu CNPJ como franqueado. Sua avaliação ficará pendente até a verificação pelo nosso time.
+          </p>
+          <div className="mt-6 text-left">
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">CNPJ</label>
+            <input
+              type="text"
+              value={cnpjInput}
+              onChange={(e) => setCnpjInput(e.target.value)}
+              placeholder="00.000.000/0000-00"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#1B4D3E] focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20"
+            />
+            {cnpjError && <p className="mt-1 text-xs text-red-500">{cnpjError}</p>}
+          </div>
+          <button
+            onClick={saveCnpj}
+            disabled={savingCnpj || !cnpjInput.trim()}
+            className="mt-4 w-full rounded-lg bg-[#1B4D3E] py-3 text-sm font-medium text-white transition hover:bg-[#153D31] disabled:opacity-50"
+          >
+            {savingCnpj ? "Salvando..." : "Confirmar CNPJ e continuar"}
+          </button>
+          <div className="mt-4 flex items-start gap-2 rounded-lg bg-gray-50 p-3 text-left">
+            <svg className="h-4 w-4 shrink-0 mt-0.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <p className="text-xs text-gray-500">Seu CNPJ é usado apenas para validar que você é franqueado. Nunca é compartilhado com a franqueadora.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Success state
   if (submitSuccess) {
     return (
@@ -273,6 +360,17 @@ export default function AvaliarContent() {
           </p>
         </div>
       </div>
+
+      {/* CNPJ not verified warning */}
+      {isFranchisee && hasCnpj && !franqueadoData?.verified && (
+        <div className="mb-6 flex items-start gap-3 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+          <svg className="h-5 w-5 text-yellow-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+          <div>
+            <p className="text-sm font-medium text-yellow-800">CNPJ aguardando verificação</p>
+            <p className="text-xs text-yellow-700 mt-0.5">Seu CNPJ está sendo validado pelo nosso time. Você pode escrever sua avaliação agora, mas ela só será publicada após a verificação.</p>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Franchise Selector */}

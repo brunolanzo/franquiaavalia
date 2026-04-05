@@ -40,6 +40,10 @@ export async function GET() {
             resposta: true,
           },
         },
+        sugestoesFranquia: {
+          orderBy: { createdAt: "desc" },
+          select: { id: true, nome: true, status: true, createdAt: true },
+        },
       },
     });
 
@@ -62,6 +66,7 @@ export async function GET() {
         },
         franqueado: user.franqueado,
         avaliacoes: user.avaliacoes,
+        sugestoes: user.sugestoesFranquia,
       },
     });
   } catch (error) {
