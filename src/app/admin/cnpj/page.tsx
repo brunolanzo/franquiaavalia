@@ -11,6 +11,12 @@ interface FranqueadoItem {
   franquia: { nome: string } | null;
 }
 
+function formatCnpj(cnpj: string): string {
+  const d = cnpj.replace(/\D/g, "");
+  if (d.length !== 14) return cnpj;
+  return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12)}`;
+}
+
 export default function AdminCnpjPage() {
   const [franqueados, setFranqueados] = useState<FranqueadoItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +107,7 @@ export default function AdminCnpjPage() {
                     <p className="font-semibold text-gray-900">{f.user.name}</p>
                     <p className="text-sm text-gray-500">{f.user.email}</p>
                     <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
-                      <span><span className="font-medium">CNPJ:</span> {f.cnpj}</span>
+                      <span><span className="font-medium">CNPJ:</span> {formatCnpj(f.cnpj)}</span>
                       {f.franquia && <span><span className="font-medium">Franquia:</span> {f.franquia.nome}</span>}
                     </div>
                   </div>
@@ -131,7 +137,7 @@ export default function AdminCnpjPage() {
                       <p className="font-semibold text-gray-900">{f.user.name}</p>
                       <p className="text-sm text-gray-500">{f.user.email}</p>
                       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
-                        <span><span className="font-medium">CNPJ:</span> {f.cnpj}</span>
+                        <span><span className="font-medium">CNPJ:</span> {formatCnpj(f.cnpj)}</span>
                         {f.franquia && <span><span className="font-medium">Franquia:</span> {f.franquia.nome}</span>}
                       </div>
                     </div>
