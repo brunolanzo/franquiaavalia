@@ -6,6 +6,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Star, Clock, CheckCircle, XCircle, MessageSquare, Building2 } from "lucide-react";
 
+function formatCnpj(cnpj: string): string {
+  const d = cnpj.replace(/\D/g, "");
+  if (d.length !== 14) return cnpj;
+  return `${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12)}`;
+}
+
 export default function DashboardPage() {
   const { status } = useSession();
   const router = useRouter();
@@ -62,7 +68,7 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-500">{user?.email}</p>
             {franqueado && (
               <div className="mt-1 flex items-center gap-2">
-                <span className="text-xs text-gray-500">CNPJ: {(franqueado.cnpj as string) || "Não informado"}</span>
+                <span className="text-xs text-gray-500">CNPJ: {franqueado.cnpj ? formatCnpj(franqueado.cnpj as string) : "Não informado"}</span>
                 <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${franqueado.verified ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
                   {franqueado.verified ? "Verificado" : "Aguardando"}
                 </span>
