@@ -96,11 +96,12 @@ export default function AvaliarContent() {
       fetch(`/api/franquias/${franquiaId}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data?.id) {
+          const franquia = data?.data;
+          if (franquia?.id) {
             const franchise: FranquiaOption = {
-              id: data.id,
-              name: data.name || data.nome,
-              segmento: data.segmento,
+              id: franquia.id,
+              name: franquia.name || franquia.nome,
+              segmento: franquia.segmento,
             };
             setSelectedFranchise(franchise);
             setValue("franquiaId", franchise.id);
