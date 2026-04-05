@@ -9,7 +9,7 @@ import { LayoutDashboard, Star, User, Building2, Menu, X } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
-  { href: "/dashboard/minha-franquia", label: "Minha Franquia", icon: Building2 },
+  { href: "/dashboard/minha-franquia", label: "Minhas Franquias", icon: Building2 },
   { href: "/dashboard/avaliar", label: "Avaliar Franquia", icon: Star },
   { href: "/dashboard/perfil", label: "Meu Perfil", icon: User },
 ];

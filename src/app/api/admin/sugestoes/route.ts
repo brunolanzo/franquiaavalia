@@ -92,13 +92,20 @@ export async function PUT(req: NextRequest) {
         ? SEGMENTO_MAP[sugestao.segmento]
         : "OUTROS";
 
-      await prisma.franquia.create({
+      const novaFranquia = await prisma.franquia.create({
         data: {
           slug,
           nome: sugestao.nome,
           segmento,
           sede: sugestao.cidade || null,
         },
+      });
+
+      // Link the franchise to the user who suggested it
+      await prisma.franqueado.upsert({
+        where: { userId: sugestao.userId },
+        update: { franquiaId: novaFranquia.id },
+        create: { userId: sugestao.userId, franquiaId: novaFranquia.id },
       });
     }
 
