@@ -30,8 +30,6 @@ export default function SugestoesPage() {
     type: "success" | "error";
   } | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [criarLoading, setCriarLoading] = useState<string | null>(null);
-
   const fetchSugestoes = useCallback(async () => {
     setLoading(true);
     try {
@@ -80,28 +78,6 @@ export default function SugestoesPage() {
       setNotification({ message: "Erro ao processar ação", type: "error" });
     } finally {
       setActionLoading(null);
-    }
-  };
-
-  const handleCriarFranquia = async (id: string) => {
-    setCriarLoading(id);
-    try {
-      const res = await fetch("/api/admin/sugestoes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setNotification({ message: "Franquia criada com sucesso!", type: "success" });
-        fetchSugestoes();
-      } else {
-        setNotification({ message: json.error || "Erro ao criar franquia", type: "error" });
-      }
-    } catch {
-      setNotification({ message: "Erro ao criar franquia", type: "error" });
-    } finally {
-      setCriarLoading(null);
     }
   };
 
@@ -195,19 +171,6 @@ export default function SugestoesPage() {
                     <p className="mt-2 text-sm text-gray-600">{s.observacoes}</p>
                   )}
                 </div>
-
-                {activeTab === "APROVADA" && (
-                  <div className="shrink-0">
-                    <button
-                      onClick={() => handleCriarFranquia(s.id)}
-                      disabled={criarLoading === s.id}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#1B4D3E] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#153D31] disabled:opacity-50"
-                    >
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                      {criarLoading === s.id ? "Criando..." : "Criar Franquia"}
-                    </button>
-                  </div>
-                )}
 
                 {activeTab === "PENDENTE" && (
                   <div className="flex gap-2 shrink-0">
