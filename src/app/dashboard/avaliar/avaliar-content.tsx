@@ -291,8 +291,17 @@ export default function AvaliarContent() {
             <input
               type="text"
               value={cnpjInput}
-              onChange={(e) => setCnpjInput(e.target.value)}
+              onChange={(e) => {
+                const digits = e.target.value.replace(/\D/g, "").slice(0, 14);
+                const formatted = digits
+                  .replace(/^(\d{2})(\d)/, "$1.$2")
+                  .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+                  .replace(/\.(\d{3})(\d)/, ".$1/$2")
+                  .replace(/(\d{4})(\d)/, "$1-$2");
+                setCnpjInput(formatted);
+              }}
               placeholder="00.000.000/0000-00"
+              maxLength={18}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#1B4D3E] focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20"
             />
             {cnpjError && <p className="mt-1 text-xs text-red-500">{cnpjError}</p>}
