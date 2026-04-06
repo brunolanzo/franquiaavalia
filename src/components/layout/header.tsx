@@ -106,7 +106,7 @@ export default function Header() {
                     type="button"
                     onClick={() => {
                       setUserDropdownOpen(false);
-                      signOut();
+                      signOut({ callbackUrl: "/" });
                     }}
                     className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
                   >
@@ -199,7 +199,7 @@ export default function Header() {
                   type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    signOut();
+                    signOut({ callbackUrl: "/" });
                   }}
                   className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-red-600 hover:bg-gray-50"
                 >
