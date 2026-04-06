@@ -44,6 +44,9 @@ export default function AvaliarContent() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Edit mode
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+
   // Preview state
   const [showPreview, setShowPreview] = useState(false);
 
@@ -89,9 +92,34 @@ export default function AvaliarContent() {
       watchedValues.notaSatisfacao) /
     6;
 
-  // Pre-select franchise from URL param
+  // Pre-select franchise from URL param; if avaliacaoId present, load existing review
   useEffect(() => {
     const franquiaId = searchParams.get("franquiaId");
+    const avaliacaoId = searchParams.get("avaliacaoId");
+
+    if (avaliacaoId) {
+      setEditingReviewId(avaliacaoId);
+      // Load existing review data to pre-fill
+      fetch(`/api/avaliacoes?myReview=true&franquiaId=${franquiaId || ""}`)
+        .then((r) => r.json())
+        .then((json) => {
+          const review = json.data;
+          if (!review) return;
+          setValue("titulo", review.titulo);
+          setValue("conteudo", review.conteudo);
+          setValue("notaSuporte", Number(review.notaSuporte));
+          setValue("notaRentabilidade", Number(review.notaRentabilidade));
+          setValue("notaTransparencia", Number(review.notaTransparencia));
+          setValue("notaTreinamento", Number(review.notaTreinamento));
+          setValue("notaMarketing", Number(review.notaMarketing));
+          setValue("notaSatisfacao", Number(review.notaSatisfacao));
+          setValue("investiriaNovamente", review.investiriaNovamente);
+          setValue("tempoFranquia", review.tempoFranquia || "");
+          setValue("anonimo", review.anonimo);
+        })
+        .catch(() => {});
+    }
+
     if (franquiaId) {
       fetch(`/api/franquias/${franquiaId}`)
         .then((res) => res.json())
@@ -177,8 +205,12 @@ export default function AvaliarContent() {
     setIsSubmitting(true);
     setSubmitError("");
     try {
-      const res = await fetch("/api/avaliacoes", {
-        method: "POST",
+      const url = editingReviewId
+        ? `/api/avaliacoes/${editingReviewId}`
+        : "/api/avaliacoes";
+      const method = editingReviewId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
@@ -331,9 +363,13 @@ export default function AvaliarContent() {
           <svg className="mx-auto mb-4 h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <h2 className="mb-2 text-xl font-semibold text-gray-900">Avaliação enviada!</h2>
+          <h2 className="mb-2 text-xl font-semibold text-gray-900">
+            {editingReviewId ? "Avaliação atualizada!" : "Avaliação enviada!"}
+          </h2>
           <p className="mb-6 text-gray-600">
-            Avaliação enviada! Ela será analisada pela equipe antes de ser publicada.
+            {editingReviewId
+              ? "Sua avaliação foi atualizada e aguarda revisão da equipe antes de ser republicada."
+              : "Avaliação enviada! Ela será analisada pela equipe antes de ser publicada."}
           </p>
           <div className="flex justify-center gap-4">
             <Link
@@ -356,9 +392,13 @@ export default function AvaliarContent() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-2 text-2xl font-bold text-gray-900">Avaliar Franquia</h1>
+      <h1 className="mb-2 text-2xl font-bold text-gray-900">
+        {editingReviewId ? "Editar Avaliação" : "Avaliar Franquia"}
+      </h1>
       <p className="mb-4 text-gray-600">
-        Compartilhe sua experiência como franqueado e ajude outros investidores.
+        {editingReviewId
+          ? "Atualize sua avaliação. Ela voltará para revisão antes de ser republicada."
+          : "Compartilhe sua experiência como franqueado e ajude outros investidores."}
       </p>
       <div className="mb-8 flex items-start gap-3 rounded-lg bg-[#1B4D3E]/5 border border-[#1B4D3E]/10 p-4">
         <svg className="h-5 w-5 text-[#1B4D3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
@@ -396,6 +436,7 @@ export default function AvaliarContent() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
+                  if (editingReviewId) return;
                   setSearchQuery(e.target.value);
                   if (selectedFranchise) {
                     setSelectedFranchise(null);
@@ -403,8 +444,9 @@ export default function AvaliarContent() {
                   }
                   searchFranchises(e.target.value);
                 }}
+                readOnly={!!editingReviewId}
                 placeholder="Digite o nome da franquia..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 pr-10 text-sm transition focus:border-[#1B4D3E] focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20"
+                className={`w-full rounded-lg border border-gray-300 px-4 py-2.5 pr-10 text-sm transition focus:border-[#1B4D3E] focus:outline-none focus:ring-2 focus:ring-[#1B4D3E]/20 ${editingReviewId ? "bg-gray-50 text-gray-500 cursor-not-allowed" : ""}`}
               />
               {isSearching && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -804,8 +846,10 @@ export default function AvaliarContent() {
             {isSubmitting ? (
               <>
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Enviando...
+                {editingReviewId ? "Salvando..." : "Enviando..."}
               </>
+            ) : editingReviewId ? (
+              "Salvar Alterações"
             ) : (
               "Enviar Avaliação"
             )}

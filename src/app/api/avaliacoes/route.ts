@@ -104,6 +104,19 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const recent = searchParams.get("recent");
+    const myReview = searchParams.get("myReview");
+
+    // Return authenticated user's own review for a franchise
+    if (myReview === "true" && franquiaId) {
+      const session = await auth();
+      if (!session?.user) {
+        return NextResponse.json({ success: true, data: null });
+      }
+      const review = await prisma.avaliacao.findFirst({
+        where: { userId: session.user.id, franquiaId },
+      });
+      return NextResponse.json({ success: true, data: review });
+    }
 
     const where: Record<string, unknown> = {
       status: "APROVADA",

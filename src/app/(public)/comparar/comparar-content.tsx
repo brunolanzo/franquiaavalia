@@ -233,7 +233,7 @@ function FranquiaSearchInput({
 
 function CompRowLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center py-3 px-4 text-sm font-medium text-gray-600 bg-gray-50 border-b border-gray-100 min-w-[140px]">
+    <div className="flex items-center py-3 px-4 text-sm font-medium text-gray-600 bg-gray-50 border-b border-gray-100 w-40 shrink-0">
       {children}
     </div>
   );
@@ -251,7 +251,7 @@ function CompRowValue({
   return (
     <div
       className={cn(
-        "flex items-center py-3 px-4 text-sm text-gray-800 border-b border-gray-100 min-w-[200px]",
+        "flex items-center py-3 px-4 text-sm text-gray-800 border-b border-gray-100 flex-1 min-w-0",
         highlight && "bg-green-50",
         className
       )}
@@ -487,7 +487,7 @@ export default function CompararContent() {
                 f ? (
                   <div
                     key={i}
-                    className="flex flex-col items-center gap-2 py-4 px-4 border-b border-gray-100 min-w-[200px] bg-white"
+                    className="flex flex-col items-center gap-2 py-4 px-4 border-b border-gray-100 flex-1 min-w-0 bg-white"
                   >
                     {f.logo ? (
                       <img
@@ -774,12 +774,12 @@ export default function CompararContent() {
 
             {/* --- CTA Row --- */}
             <div className="flex">
-              <div className="min-w-[140px] py-4 px-4" />
+              <div className="w-40 shrink-0 py-4 px-4" />
               {franquias.map((f, i) =>
                 f ? (
                   <div
                     key={i}
-                    className="flex items-center py-4 px-4 min-w-[200px]"
+                    className="flex items-center py-4 px-4 flex-1 min-w-0"
                   >
                     <Link
                       href={`/franquia/${f.slug}`}
