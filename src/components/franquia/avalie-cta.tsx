@@ -11,7 +11,7 @@ interface AvalieCTAProps {
 }
 
 export function AvalieCTA({ franquiaId, franquiaNome }: AvalieCTAProps) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [existingReviewId, setExistingReviewId] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);

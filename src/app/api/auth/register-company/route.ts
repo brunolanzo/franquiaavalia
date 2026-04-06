@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { email, cnpj, razaoSocial, firstName, lastName, cargo, celular, password } = parsed.data;
+    const { email, cnpj, razaoSocial, firstName, lastName, password } = parsed.data;
     const digits = cnpj.replace(/\D/g, "");
 
     // Confirm email was verified via code
