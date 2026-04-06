@@ -86,6 +86,7 @@ export default function RegistroEmpresaPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [testCode, setTestCode] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -156,7 +157,10 @@ export default function RegistroEmpresaPage() {
       });
       const json = await res.json();
       if (!json.success) { setError(json.error); return; }
-      if (json.devCode) setError(`[DEV] Código: ${json.devCode}`);
+      if (json.devCode) {
+        setTestCode(json.devCode);
+        setCode(json.devCode.split(""));
+      }
       setStep(3);
     } catch {
       setError("Erro ao enviar código. Tente novamente.");
@@ -301,14 +305,16 @@ export default function RegistroEmpresaPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <StepIndicator current={step} />
 
-        {error && !error.startsWith("[DEV]") && (
+        {error && (
           <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
-        {error.startsWith("[DEV]") && (
-          <div className="mb-5 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700 font-mono">
-            {error}
+        {testCode && step === 3 && (
+          <div className="mb-5 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+            <p className="font-semibold mb-0.5">Modo de teste — e-mail não configurado</p>
+            <p>Seu código: <span className="font-mono font-bold tracking-widest text-base">{testCode}</span></p>
+            <p className="text-xs text-blue-600 mt-1">Os campos já foram preenchidos automaticamente.</p>
           </div>
         )}
 

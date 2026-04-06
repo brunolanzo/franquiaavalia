@@ -29,12 +29,13 @@ export async function POST(request: NextRequest) {
       data: { email, cnpj: digits, code, expiresAt },
     });
 
+    const emailConfigured = !!process.env.EMAIL_HOST;
     await sendVerificationCode(email, code);
 
-    const isDev = process.env.NODE_ENV !== "production";
     return NextResponse.json({
       success: true,
-      ...(isDev ? { devCode: code } : {}),
+      // Return code in response when no SMTP is configured (for testing)
+      ...(!emailConfigured ? { devCode: code } : {}),
     });
   } catch (error) {
     console.error("Send code error:", error);
