@@ -1,13 +1,24 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { companyRegisterSchema } from "@/types";
 import { slugify } from "@/lib/utils";
+import { z } from "zod";
+
+const schema = z.object({
+  email: z.string().email(),
+  cnpj: z.string(),
+  razaoSocial: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  cargo: z.string().optional(),
+  celular: z.string().optional(),
+  password: z.string().min(8),
+});
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const parsed = companyRegisterSchema.safeParse(body);
+    const parsed = schema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -16,78 +27,74 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, password, companyName, cnpj, segmento } = parsed.data;
+    const { email, cnpj, razaoSocial, firstName, lastName, cargo, celular, password } = parsed.data;
+    const digits = cnpj.replace(/\D/g, "");
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    // Confirm email was verified via code
+    const verifiedCode = await prisma.companyVerificationCode.findFirst({
+      where: {
+        email,
+        cnpj: digits,
+        verified: true,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: "desc" },
     });
 
-    if (existingUser) {
+    if (!verifiedCode) {
       return NextResponse.json(
-        { success: false, error: "Email já cadastrado" },
+        { success: false, error: "Verificação de e-mail expirada. Recomece o cadastro." },
         { status: 400 }
       );
     }
 
-    const cleanCnpj = cnpj.replace(/\D/g, "");
-    const existingFranquia = await prisma.franquia.findFirst({
-      where: { cnpj: cleanCnpj },
-    });
+    // Check duplicates
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return NextResponse.json({ success: false, error: "E-mail já cadastrado" }, { status: 400 });
+    }
 
+    const existingFranquia = await prisma.franquia.findFirst({ where: { cnpj: digits } });
     if (existingFranquia) {
       return NextResponse.json(
-        { success: false, error: "CNPJ já cadastrado. Se esta é sua empresa, entre em contato." },
+        { success: false, error: "CNPJ já cadastrado. Entre em contato se é sua empresa." },
         { status: 400 }
       );
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    let slug = slugify(companyName);
+    const fullName = `${firstName} ${lastName}`.trim();
 
-    const existingSlug = await prisma.franquia.findUnique({
-      where: { slug },
-    });
-
-    if (existingSlug) {
-      slug = `${slug}-${Date.now().toString(36)}`;
-    }
+    let slug = slugify(razaoSocial);
+    const existingSlug = await prisma.franquia.findUnique({ where: { slug } });
+    if (existingSlug) slug = `${slug}-${Date.now().toString(36)}`;
 
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-        role: "COMPANY",
-      },
+      data: { name: fullName, email, passwordHash, role: "COMPANY" },
     });
 
-    const franquia = await prisma.franquia.create({
+    await prisma.franquia.create({
       data: {
-        nome: companyName,
+        nome: razaoSocial,
         slug,
-        cnpj: cleanCnpj,
-        segmento: segmento as "ALIMENTACAO",
+        cnpj: digits,
+        segmento: "OUTROS",
         companyUsers: {
-          create: {
-            email: user.email,
-            role: "ADMIN",
-          },
+          create: { email: user.email!, role: "ADMIN" },
         },
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        user: { id: user.id, name: user.name, email: user.email },
-        franquia: { id: franquia.id, slug: franquia.slug },
-      },
+    // Mark verification code as used
+    await prisma.companyVerificationCode.update({
+      where: { id: verifiedCode.id },
+      data: { used: true },
     });
+
+    return NextResponse.json({ success: true, data: { email: user.email } });
   } catch (error) {
     console.error("Company registration error:", error);
-    return NextResponse.json(
-      { success: false, error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Erro interno do servidor" }, { status: 500 });
   }
 }

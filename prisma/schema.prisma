@@ -261,6 +261,21 @@ enum CompanyRole {
   ATENDENTE
 }
 
+// ==================== VERIFICAÇÃO DE EMPRESA ====================
+
+model CompanyVerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  cnpj      String
+  code      String
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("company_verification_codes")
+}
+
 // ==================== SUGESTÕES DE FRANQUIA ====================
 
 model SugestaoFranquia {

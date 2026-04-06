@@ -5,6 +5,8 @@ import { z } from "zod";
 
 const updatePerfilSchema = z.object({
   descricao: z.string().optional(),
+  logo: z.string().optional(),
+  segmento: z.string().optional(),
   website: z.string().optional(),
   telefone: z.string().optional(),
   email: z.string().email().optional(),
