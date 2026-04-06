@@ -76,9 +76,13 @@ export async function PUT(request: Request) {
       );
     }
 
+    const { segmento, ...rest } = parsed.data;
     const franquia = await prisma.franquia.update({
       where: { id: companyUser.franquiaId },
-      data: parsed.data,
+      data: {
+        ...rest,
+        ...(segmento ? { segmento: segmento as import("@prisma/client").Segmento } : {}),
+      },
     });
 
     return NextResponse.json({ success: true, data: franquia });
